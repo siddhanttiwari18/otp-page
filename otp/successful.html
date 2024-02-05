@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Successful</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #success-container {
+      text-align: center;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    #success-icon {
+      color: #4CAF50;
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div id="success-container">
+  <div id="success-icon">&#10004;</div>
+  <h2>Transaction Successful</h2>
+  <p>Your payment has been successfully processed. Thank you for using our services!</p>
+  <button onclick="redirectToHome()">Back to Home</button>
+</div>
+
+<script>
+  function redirectToHome() {
+    window.location.href = 'index.html';
+  }
+</script>
+
+</body>
+</html>

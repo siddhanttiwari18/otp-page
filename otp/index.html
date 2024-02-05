@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Gateway OTP Verification</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #otp-container {
+      text-align: center;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    input {
+      padding: 12px;
+      margin: 10px;
+      width: 100%;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #resend-button {
+      margin-top: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4285F4;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #resend-button:disabled {
+      background-color: #ddd;
+      color: #666;
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 10px;
+    }
+
+    .success-message {
+      color: #4CAF50;
+      margin-top: 10px;
+    }
+
+    #time-left {
+      font-size: 14px;
+      color: #333;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    @media (max-width: 600px) {
+      #otp-container {
+        padding: 20px;
+      }
+
+      input {
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="otp-container">
+  <h2>Payment Gateway - OTP Verification</h2>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <img src="rupay-logo.png" alt="RuPay Logo" width="100" height="65">
+    <img src="visa.png" alt="MasterCard Logo" width="100" height="35">
+    <img src="mastercard.png" alt="MasterCard Logo" width="100" height="50">
+  </div>
+  <p>An OTP has been sent to your registered mobile number or email address. Please enter the OTP to complete the transaction.</p>
+  <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" oninput="validateInput(this)">
+  <div class="error-message" id="otp-error"></div>
+  <div class="success-message" id="otp-success"></div>
+  <button onclick="validateOTP()">Verify OTP</button>
+  <button id="resend-button" onclick="resendOTP()" disabled>Resend OTP</button>
+  <div id="time-left"></div>
+</div>
+
+<script>
+  var timer;
+  var timeLeft = 30;
+
+  function validateInput(inputElement) {
+    inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
+
+    var errorMessage = document.getElementById('otp-error');
+    if (inputElement.value.length !== 6) {
+      errorMessage.textContent = 'OTP must be exactly 6 digits';
+    } else {
+      errorMessage.textContent = '';
+    }
+  }
+
+  function validateOTP() {
+    var enteredOTP = document.getElementById('otp').value;
+
+    if (enteredOTP.length !== 6) {
+      alert('Invalid OTP. Please enter exactly 6 digits.');
+      return;
+    }
+
+    clearTimeout(timer);
+    startTimer();
+
+    setTimeout(function() {
+      var isOTPValid = mockServerValidation(enteredOTP);
+
+      if (isOTPValid) {
+        showSuccessMessage('OTP is valid. Transaction successful!');
+       
+        setTimeout(function() {
+          window.location.href = 'successful.html';
+        }, 2000);
+      } else {
+        showErrorMessage('Invalid OTP. Please try again.');
+      }
+    }, 1000);
+  }
+
+  function showErrorMessage(message) {
+    var errorMessageElement = document.getElementById('otp-error');
+    errorMessageElement.textContent = message;
+    clearSuccessMessage();
+  }
+
+  function showSuccessMessage(message) {
+    var successMessageElement = document.getElementById('otp-success');
+    successMessageElement.textContent = message;
+    clearErrorMessage();
+  }
+
+  function clearErrorMessage() {
+    var errorMessageElement = document.getElementById('otp-error');
+    errorMessageElement.textContent = '';
+  }
+
+  function clearSuccessMessage() {
+    var successMessageElement = document.getElementById('otp-success');
+    successMessageElement.textContent = '';
+  }
+
+  function resendOTP() {
+    alert('New OTP sent!');
+
+    clearTimeout(timer);
+    startTimer();
+
+    clearErrorMessage();
+    clearSuccessMessage();
+    document.getElementById('otp').value = '';
+  }
+
+  function startTimer() {
+    var resendButton = document.getElementById('resend-button');
+    var timeLeftElement = document.getElementById('time-left');
+    resendButton.disabled = true;
+
+    timer = setInterval(function () {
+      if (timeLeft > 0) {
+        timeLeft--;
+        timeLeftElement.textContent = 'Time left: ' + timeLeft + ' seconds';
+      }  else {
+        clearInterval(timer);
+        resendButton.disabled = false;
+        timeLeft = 30;
+        timeLeftElement.textContent = ''; 
+      }
+    }, 1000);
+  }
+
+  function mockServerValidation(enteredOTP) {
+    return enteredOTP === '123456'; 
+  }
+
+  startTimer(); 
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
